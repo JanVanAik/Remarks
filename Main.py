@@ -2,15 +2,32 @@ from datetime import datetime
 import json
 
 Storage = []
-
+# Программа сохраняет заметки в имеющийся список и, при необходимости, парсит его в json
+# Парсить заметку сразу, при создании, не оптимально. Наиболее оптимальный вариант - иметь txt файл,
+# а его уже, при необходимости, убирать в json, но текущая реализация, на мой взгляд, тоже подходит.
+# При этом, возможность закачки сразу в файл тоже реализовал
 def create(name, body):
     date = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
-    Storage.append({"id": len(Storage)+1 if len(Storage) > 0 else 1,
+
+    Remark = {"id": len(Storage)+1 if len(Storage) > 0 else 1,
                  "name": name,
                  "body": body,
                  "dtCreation": date,
-                 "dtLastEdit": date})
+                 "dtLastEdit": date}
+    Storage.append(Remark)
+
+    # Реализация для немедленного парсинга заметки в файл
+    # with open (f"{Remark['name']}.json", 'w') as file:
+    #             json.dump(Storage, file)
+    #             print("Ваш файл remarks.json готов. ")
+
     return f'Заметка с названием {name} создана'
+
+
+# Функция для извлечения и конвертации json.str в python.dict
+def extractReamrk(file):
+    with open(file, "r") as file:
+        dictFromJson = json.loads(file.read())
 
 
 def choice(name):
