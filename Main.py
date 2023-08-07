@@ -1,17 +1,15 @@
-# remark = [{"id": 1, "name": "main", "body": "dobby", "datetimeCreation": "datetime",
-#            "dateTimeEdit": "Datetime"}]
-import datetime
+from datetime import datetime
 import json
 
 Storage = []
 
 def create(name, body):
-    date = datetime.datetime.now()
+    date = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
     Storage.append({"id": len(Storage)+1 if len(Storage) > 0 else 1,
                  "name": name,
                  "body": body,
                  "dtCreation": date,
-                 "dtLastEdit": datetime.datetime.now()})
+                 "dtLastEdit": date})
     return f'Заметка с названием {name} создана'
 
 
@@ -51,7 +49,7 @@ def edit(name):
         return 'Такой заметки нет'
     else:
         for i in Storage:
-            if i["id"] == res:
+            if i["id"] == int(res):
                 userReaction = input(f'Вот старый текст заметки\n*****\n{i["body"]}\n*****\n'
                                      f'Введите новый текст заметки: \n')
                 i['body'] = userReaction
@@ -61,9 +59,13 @@ def edit(name):
 
 
 def read(name):
-    for i in Storage:
-        if i['name'] == name:
-            return i
+    res = choice(name)
+    if res == None:
+        return 'Такой заметки нет'
+    else:
+        for i in Storage:
+            if i['id'] == int(res):
+                return i
 
 
 def amount():
