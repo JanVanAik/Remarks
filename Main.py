@@ -15,28 +15,57 @@ def create(name, body):
     return f'Заметка с названием {name} создана'
 
 
-def edit(name=None, id=None):
-    pass
+def choice(name):
+    counter = 0
+    choiceList = []
+    for i in Storage:
+        if i[name] == name:
+            choiceList.append((i))
+    if counter == 0:
+        return None
+    elif counter == 1:
+        return(choiceList[0])
+    else:
+        idDel = input(f'Заметок с таким именем несколько, вот они{choiceList}.'
+                      f' Пожалуйста, введите id нужной заметки')
+        for i in choiceList:
+            if i[id] == idDel:
+                return i
 
 
 def delete(name):
-    counter = 0
-    delList = []
-    for i in Storage:
-        if i[name] == name:
-            delList.append((i))
-    if counter == 0:
+    res = choice(name)
+    if res == None:
         return 'Такой заметки нет'
-    elif counter == 1:
-        Storage.remove(delList[0])
-        return "Заметка удалена"
     else:
-        idDel = input(f'Заметок с таким именем несколько, вот они{delList}.'
-                      f' Пожалуйста, введите id заметки, которую хотите удалить')
-        for i in delList:
-            if i[id] == idDel:
-                Storage.remove(i)
-                return 'Заметка удалена'
+        Storage.remove(res)
+        return 'Заметка удалена'
+
+
+def edit(name):
+    pass
+
+
+
+
+# def delete(name):
+#     counter = 0
+#     delList = []
+#     for i in Storage:
+#         if i[name] == name:
+#             delList.append((i))
+#     if counter == 0:
+#         return 'Такой заметки нет'
+#     elif counter == 1:
+#         Storage.remove(delList[0])
+#         return "Заметка удалена"
+#     else:
+#         idDel = input(f'Заметок с таким именем несколько, вот они{delList}.'
+#                       f' Пожалуйста, введите id заметки, которую хотите удалить')
+#         for i in delList:
+#             if i[id] == idDel:
+#                 Storage.remove(i)
+#                 return 'Заметка удалена'
 
 
 def read(name):
