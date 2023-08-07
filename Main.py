@@ -7,8 +7,8 @@ Storage = []
 
 def create(name, body):
     date = datetime.datetime.now()
-    Storage.append({"id": len(Storage) if len(Storage) > 0 else 1,
-                 "name": name.ltrim(),
+    Storage.append({"id": len(Storage)+1 if len(Storage) > 0 else 1,
+                 "name": name,
                  "body": body,
                  "dtCreation": date,
                  "dtLastEdit": datetime.datetime.now()})
@@ -19,18 +19,19 @@ def choice(name):
     counter = 0
     choiceList = []
     for i in Storage:
-        if i[name] == name:
+        if i['name'] == name:
             choiceList.append((i))
+            counter +=1
     if counter == 0:
         return None
     elif counter == 1:
-        return(choiceList[0])
+        return(choiceList[0]['id'])
     else:
-        idDel = input(f'Заметок с таким именем несколько, вот они{choiceList}.'
-                      f' Пожалуйста, введите id нужной заметки')
+        idChoice = input(f'Заметок с таким именем несколько, вот они\n{choiceList}\n.'
+                      f' Пожалуйста, введите id нужной заметки: \n')
         for i in choiceList:
-            if i[id] == idDel:
-                return i
+            if i['id'] == int(idChoice):
+                return idChoice
 
 
 def delete(name):
@@ -38,39 +39,30 @@ def delete(name):
     if res == None:
         return 'Такой заметки нет'
     else:
-        Storage.remove(res)
-        return 'Заметка удалена'
+        for i in Storage:
+            if i['id'] == res:
+                Storage.remove(i)
+                return 'Заметка удалена'
 
 
 def edit(name):
-    pass
+    res = choice(name)
+    if res == None:
+        return 'Такой заметки нет'
+    else:
+        for i in Storage:
+            if i["id"] == res:
+                userReaction = input(f'Вот старый текст заметки\n*****\n{i["body"]}\n*****\n'
+                                     f'Введите новый текст заметки: \n')
+                i['body'] = userReaction
+                return 'Заметка изменена'
 
 
-
-
-# def delete(name):
-#     counter = 0
-#     delList = []
-#     for i in Storage:
-#         if i[name] == name:
-#             delList.append((i))
-#     if counter == 0:
-#         return 'Такой заметки нет'
-#     elif counter == 1:
-#         Storage.remove(delList[0])
-#         return "Заметка удалена"
-#     else:
-#         idDel = input(f'Заметок с таким именем несколько, вот они{delList}.'
-#                       f' Пожалуйста, введите id заметки, которую хотите удалить')
-#         for i in delList:
-#             if i[id] == idDel:
-#                 Storage.remove(i)
-#                 return 'Заметка удалена'
 
 
 def read(name):
     for i in Storage:
-        if i[name] == name:
+        if i['name'] == name:
             return i
 
 
@@ -79,13 +71,13 @@ def amount():
 
 
 while True:
-    UserChoice = input("Введите требуемое действие:  "
-                       "'create' - создать заметку, "
-                       "'edit' - редактировать заметку, "
-                       "'delete' - удалить заметку, "
-                       "'read' - получить информацию о заметке, "
-                       "'amount' - узнать общее количество заметок"
-                       "'parse' - перевести заметки в json формат для передачи данных "
+    UserChoice = input("Введите требуемое действие:\n"
+                       "'create' - создать заметку\n"
+                       "'edit' - редактировать заметку \n"
+                       "'delete' - удалить заметку\n"
+                       "'read' - получить информацию о заметке\n"
+                       "'amount' - узнать общее количество заметок\n"
+                       "'parse' - перевести заметки в json формат для передачи данных \n"
                        "'exit' - закончить работу программы\n")
 
     # Создание замети
@@ -94,11 +86,11 @@ while True:
 
     # Редактирование заметок
     elif UserChoice == "edit":
-        pass
+        print(edit(input('Введите название заметки:\n')))
 
     #  Удаление заметок
     elif UserChoice == "delete":
-        print(delete("Введите имя заметки, которую хотите удалить: "))
+        print(delete(input("Введите имя заметки, которую хотите удалить: ")))
 
     #  Чтение заметок
     elif UserChoice == "read":
