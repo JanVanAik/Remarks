@@ -5,7 +5,7 @@ Storage = []
 # Программа сохраняет заметки в имеющийся список и, при необходимости, парсит его в json
 # Парсить заметку сразу, при создании, не оптимально. Наиболее оптимальный вариант - иметь txt файл,
 # а его уже, при необходимости, убирать в json, но текущая реализация, на мой взгляд, тоже подходит.
-# При этом, возможность закачки сразу в файл тоже реализовал
+# При этом, возможность закачки сразу в файл тоже реализовал и чтения из него
 def create(name, body):
     date = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
 
@@ -19,15 +19,16 @@ def create(name, body):
     # Реализация для немедленного парсинга заметки в файл
     # with open (f"{Remark['name']}.json", 'w') as file:
     #             json.dump(Storage, file)
-    #             print("Ваш файл remarks.json готов. ")
+    #             print("Ваш файл json готов. ")
 
     return f'Заметка с названием {name} создана'
 
 
-# Функция для извлечения и конвертации json.str в python.dict
-def extractReamrk(file):
+# Функция для извлечения и конвертации json.str в python.dict.
+def extractRemark(file):
     with open(file, "r") as file:
         dictFromJson = json.loads(file.read())
+        return dictFromJson
 
 
 def choice(name):
@@ -73,8 +74,6 @@ def edit(name):
                 return 'Заметка изменена'
 
 
-
-
 def read(name):
     res = choice(name)
     if res == None:
@@ -83,6 +82,12 @@ def read(name):
         for i in Storage:
             if i['id'] == int(res):
                 return i
+
+def readAll():
+    res = ''
+    for i in Storage:
+        res += f"{i}\n"
+    return res
 
 
 def amount():
@@ -95,6 +100,7 @@ while True:
                        "'edit' - редактировать заметку \n"
                        "'delete' - удалить заметку\n"
                        "'read' - получить информацию о заметке\n"
+                       "'readall' - получить весь список заметок"
                        "'amount' - узнать общее количество заметок\n"
                        "'parse' - перевести заметки в json формат для передачи данных \n"
                        "'exit' - закончить работу программы\n")
@@ -118,6 +124,10 @@ while True:
             print("Такой заметки нет")
         else:
             print(Res)
+
+    #  Чтение списка заметок
+    elif UserChoice == "readall":
+        print(readAll())
 
     # Узнать количество заметок
     elif UserChoice == "amount":
